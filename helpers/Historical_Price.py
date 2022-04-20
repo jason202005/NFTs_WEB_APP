@@ -4,10 +4,10 @@ class Historical_Price:
 
     def __init__(self):
         self.__history = dict()
-        self.__history['ETH'] = self.__get_price_dict(pd1.read_csv('data/token_price/eth.csv').iloc[::-1])
-        self.__history['BTC'] = self.__get_price_dict(pd1.read_csv('data/token_price/btc.csv').iloc[::-1])
-        self.__history['MANA'] = self.__get_price_dict(pd1.read_csv('data/token_price/mana.csv').iloc[::-1])
-        self.__history['SAND'] = self.__get_price_dict(pd1.read_csv('data/token_price/sand.csv').iloc[::-1])
+        self.__history['ETH'] = self.__get_price_dict(pd1.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/eth.csv').iloc[::-1])
+        self.__history['BTC'] = self.__get_price_dict(pd1.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/btc.csv').iloc[::-1])
+        self.__history['MANA'] = self.__get_price_dict(pd1.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/mana.csv').iloc[::-1])
+        self.__history['SAND'] = self.__get_price_dict(pd1.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/sand.csv').iloc[::-1])
 
     def __get_price_dict(self, df):
         return dict(zip(list(df['Date'].apply(lambda d : datetime.strptime(d, '%b %d, %Y').strftime('%Y-%m-%d'))),

@@ -235,19 +235,19 @@ if option == 'Data Analysis':
 
     if 'SAND' in cryptoOptions:
         print("SAND is active")
-        sand=pd.read_csv("data/crypto data 2021-11-06 to 2022-11-07/SAND_USD Binance Historical Data.csv")
+        sand=pd.read_csv("https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/crypto%20data%202021-11-06%20to%202022-11-07/SAND_USD%20Binance%20Historical%20Data.csv")
         sand['Date'] = pd.to_datetime(sand['Date'], format='%b %d, %Y')
         sand['Date'] = sand['Date'].dt.strftime('%Y-%m-%d')
     
     if 'MANA' in cryptoOptions:
         print("MANA is active")
-        mana=pd.read_csv("data/crypto data 2021-11-06 to 2022-11-07/MANA_USD OKEx Historical Data.csv")
+        mana=pd.read_csv("https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/crypto%20data%202021-11-06%20to%202022-11-07/MANA_USD%20OKEx%20Historical%20Data.csv")
         mana['Date'] = pd.to_datetime(mana['Date'], format='%b %d, %Y')
         mana['Date'] = mana['Date'].dt.strftime('%Y-%m-%d')
 
     if 'ETH' in cryptoOptions:
         print("ETH is active")
-        eth=pd.read_csv("data/crypto data 2021-11-06 to 2022-11-07/Ethereum Historical Data - Investing.com.csv")
+        eth=pd.read_csv("https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/crypto%20data%202021-11-06%20to%202022-11-07/Ethereum%20Historical%20Data%20-%20Investing.com.csv")
         eth['Date'] = pd.to_datetime(eth['Date'], format='%b %d, %Y')
         eth['Date'] = eth['Date'].dt.strftime('%Y-%m-%d')
 
@@ -260,8 +260,8 @@ if option == 'Data Analysis':
         uploaded_file2 = st.sidebar.file_uploader("Sandbox Data", key=2)
         # uploaded_file3 = st.sidebar.file_uploader("Sandbox Data", key=3)
     else:
-        uploaded_file = "data/nft data 2021-11-06 to 2022-11-07/Decentraland_NFT_OpenSea_11_2021.csv"
-        uploaded_file2 = "data/nft data 2021-11-06 to 2022-11-07/SandBox_NFT_OpenSea_11_2021.csv"
+        uploaded_file = "https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/nft%20data%202021-11-06%20to%202022-11-07/Decentraland_NFT_OpenSea_11_2021.csv"
+        uploaded_file2 = "https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/nft%20data%202021-11-06%20to%202022-11-07/SandBox_NFT_OpenSea_11_2021.csv"
     data1, data2 = None,None
     df_created_quantity, df_created_quantity2 = None, None
     df_created_totalPrice, df_created_totalPrice2 = None, None
@@ -288,14 +288,14 @@ if option == 'Data Analysis':
                     st.markdown(filedownload(df_sand2), unsafe_allow_html=True)   
                 st.dataframe(df_sand2)
             with col2:
+                st.markdown("### Average price of decentraland")    
                 if downloadcsv:
-                    st.markdown("### Average price of decentraland")    
                     st.markdown(filedownload(df_de2), unsafe_allow_html=True)   
                 st.dataframe(df_de2)
             with col3:
+                st.markdown("### Summary")   
                 df_de2.insert(1, "Sandbox", df_sand2, True)
                 if downloadcsv:
-                    st.markdown("### Summary")    
                     st.markdown(filedownload(df_de2), unsafe_allow_html=True)   
                 df_de2.columns = ['Decentraland', 'Sandbox']
                 st.dataframe(df_de2)
