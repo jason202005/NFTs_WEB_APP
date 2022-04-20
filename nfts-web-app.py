@@ -265,53 +265,6 @@ if option == 'Data Analysis':
     data1, data2 = None,None
     df_created_quantity, df_created_quantity2 = None, None
     df_created_totalPrice, df_created_totalPrice2 = None, None
-    # if uploaded_file is not None:
-    #     #read csv
-    #     data1=pd.read_csv(uploaded_file)
-    #     asset = data1['payment_token']
-    #     payment_token_list = []
-    #     token_unit = []
-    #     for row in data1['payment_token']:
-    #         payment_token_list.append(ast.literal_eval(row)['symbol'])
-    #         token_unit.append(ast.literal_eval(row)['decimals'])
-
-    #     data1.insert(18, "payment_token_type", payment_token_list, True)
-    #     data1.insert(19, "token_unit", token_unit, True)
-     
-    #     # st.dataframe(data1) 
-    #     # convert 'created_date' to yyyy-mm-dd
-    #     data1['created_date'] = pd.to_datetime(data1['created_date'], format='%Y-%m-%d')
-    #     data1['created_date'] = data1['created_date'].dt.strftime('%Y-%m-%d')
-    #     if 'SAND' not in cryptoOptions:
-    #         st.markdown("## File 1")
-    #         st.dataframe(data1.head(5))
-    #     df_created_quantity = data1[['created_date', 'quantity']]
-    #     df_created_totalPrice = data1[['created_date', 'total_price']]
-
-    # if uploaded_file2 is not None:
-    #     #read csv
-    #     data2=pd.read_csv(uploaded_file2)
-    #     asset2 = data2['payment_token']
-    #     payment_token_list2 = []
-    #     token_unit2 = []
-    #     for row in data2['payment_token']:
-    #         payment_token_list2.append(ast.literal_eval(row)['symbol'])
-    #         token_unit2.append(ast.literal_eval(row)['decimals'])
-
-    #     data2.insert(18, "payment_token_type", payment_token_list2, True)
-    #     data2.insert(19, "token_unit", token_unit2, True)
-    #     data2['created_date'] = pd.to_datetime(data2['created_date'], format='%Y-%m-%d')
-    #     data2['created_date'] = data2['created_date'].dt.strftime('%Y-%m-%d')
-    #     if 'MANA' not in cryptoOptions:
-    #         st.markdown("## File 2")
-    #         st.dataframe(data2.head(5)) 
-    #     # for data2 the big one
-    #     df_created_quantity2 = data2[['created_date', 'quantity']]
-    #     df_created_totalPrice2 = data2[['created_date', 'total_price']]
-    #     # buffer = io.StringIO()
-    #     # df_created_totalPrice2.info(buf=buffer)
-    #     # s = buffer.getvalue()
-    #     # st.text(s)
     
     if uploaded_file is not None and uploaded_file2 is not None:
         historical_price_engine = Historical_Price()
@@ -417,40 +370,8 @@ if option == 'Data Analysis':
 
         if not bool(cryptoOptions) and percentage_change:
             st.markdown("## Please select crypto curriences you want to show in the graph on the left.")
-        #     st.markdown("## Avg price of decentraland and Sandbox")        
-        #     st.line_chart(df_de2)
-            
-            # st.markdown("## Total Sales per day")
-            # st.write(get_price_correlation(df_sand, df_de))
-            # # st.line_chart(result)
 
-            # st.markdown("## Total Price per day")
-            # # st.bar_chart(result2)
 
         
     
        
-
-##################### Layout Application ##################
-# container1 = st.container()
-# col1, col2 = st.columns(2)
-
-
-
-
-
-# with container1:
-#     with col1:
-#         # scatter_fig
-#     with col2:
-#         # bar_fig
-
-
-# container2 = st.container()
-# col3, col4 = st.columns(2)
-
-# with container2:
-#     with col3:
-#         # hist_fig
-#     with col4:
-#         # hexbin_fig
