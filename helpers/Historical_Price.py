@@ -1,15 +1,15 @@
+import pandas as pd1
+from datetime import datetime
 class Historical_Price:
 
     def __init__(self):
-        import pandas as pd
         self.__history = dict()
-        self.__history['ETH'] = self.__get_price_dict(pd.read_csv('token_price/eth.csv').iloc[::-1])
-        self.__history['BTC'] = self.__get_price_dict(pd.read_csv('token_price/btc.csv').iloc[::-1])
-        self.__history['MANA'] = self.__get_price_dict(pd.read_csv('token_price/mana.csv').iloc[::-1])
-        self.__history['SAND'] = self.__get_price_dict(pd.read_csv('token_price/sand.csv').iloc[::-1])
+        self.__history['ETH'] = self.__get_price_dict(pd1.read_csv('data/token_price/eth.csv').iloc[::-1])
+        self.__history['BTC'] = self.__get_price_dict(pd1.read_csv('data/token_price/btc.csv').iloc[::-1])
+        self.__history['MANA'] = self.__get_price_dict(pd1.read_csv('data/token_price/mana.csv').iloc[::-1])
+        self.__history['SAND'] = self.__get_price_dict(pd1.read_csv('data/token_price/sand.csv').iloc[::-1])
 
     def __get_price_dict(self, df):
-        from datetime import datetime
         return dict(zip(list(df['Date'].apply(lambda d : datetime.strptime(d, '%b %d, %Y').strftime('%Y-%m-%d'))),
                         list(df['Price'].apply(lambda p : float(p.replace(',', '')) if isinstance(p, str) else float(p)))))
     
