@@ -265,7 +265,6 @@ if option == 'Data Analysis':
     data1, data2 = None,None
     df_created_quantity, df_created_quantity2 = None, None
     df_created_totalPrice, df_created_totalPrice2 = None, None
-
     
     if uploaded_file is not None and uploaded_file2 is not None:
         historical_price_engine = Historical_Price()
