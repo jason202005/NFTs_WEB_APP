@@ -1,4 +1,4 @@
-import datetime
+import datetime 
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -170,7 +170,7 @@ def get_price_correlation(df1, df2):
 
 option = st.sidebar.selectbox(
      'What would you like to do?',
-     ('Download NFTs Data', 'Data Analysis'))
+     ('Download NFTs Data', 'Data Analysis', 'Price Prediction'))
 
 
 ################
@@ -294,13 +294,12 @@ if option == 'Data Analysis':
             with col3:
                 st.markdown("### Summary")   
                 df_de2.insert(1, "Sandbox", df_sand2, True)
-                if downloadcsv:
-                    st.markdown(filedownload(df_de2), unsafe_allow_html=True)   
                 df_de2.columns = ['Decentraland', 'Sandbox']
+                if downloadcsv:
+                    resulttmp = df_de2
+                    resulttmp = resulttmp.rename_axis('Date').reset_index()
+                    st.markdown(filedownload(resulttmp), unsafe_allow_html=True)   
                 st.dataframe(df_de2)
-
-            # ax = df_sand2.plot(figsize=(50, 10),rot=90, legend=True, fontsize=12)
-            # df_de2.plot(ax=ax, sharex=ax, figsize=(50, 10),rot=90, legend=True, fontsize=12)
             
             if 'SAND' in cryptoOptions:
                 sand_price = sand[['Price', 'Date']]
@@ -320,8 +319,8 @@ if option == 'Data Analysis':
                 eth_price.columns = ['eth_price','Date']
                 df_de2 = df_de2.join(eth_price.set_index('Date'))
             
-                          
-            st.markdown("## Avg price of decentraland and Sandbox with ETH price history")        
+            # st.dataframe(df_de2)
+            st.markdown("## Avg price of decentraland and Sandbox with tokens price history")        
             st.line_chart(df_de2)
 
         elif bool(cryptoOptions) :
@@ -365,10 +364,164 @@ if option == 'Data Analysis':
                 result = result.join(df_sand2_change)
 
             st.dataframe(result)
-            st.markdown("## Change of Avg price of decentraland and Sandbox ")        
+            if downloadcsv:
+                resulttmp = result
+                resulttmp = resulttmp.rename_axis('Date').reset_index()
+                st.markdown(filedownload(resulttmp), unsafe_allow_html=True)   
+            st.markdown("##  Growth rate of Selected tokens")
+                    
             st.line_chart(result)
 
         if not bool(cryptoOptions) and percentage_change:
             st.markdown("## Please select crypto curriences you want to show in the graph on the left.")
 
     
+if option == 'Price Prediction':
+
+    # import pandas as pd
+    # import yfinance as yf
+    from datetime import datetime
+    from datetime import timedelta
+    import plotly.graph_objects as go
+    from fbprophet import Prophet
+    from fbprophet.plot import plot_plotly, plot_components_plotly
+    import warnings
+
+    warnings.filterwarnings('ignore')
+
+    pd.options.display.float_format = '${:,.2f}'.format
+    START = "2015-01-01"
+    TODAY = "2022-01-01"
+    st.title('ETH Forecast App')
+
+    stocks = ('ETH', 'MANA', 'SAND')
+    selected_stock = st.selectbox('Select dataset for prediction', stocks)
+
+    today = datetime.today().strftime('%Y-%m-%d')
+    DATASET_START_DATE = '2022-03-04' 
+    NFT_COLLECTION = 'Sandbox' #options: 'Decentraland', 'Sandbox'
+    FUTURE_DATAFRAME_DAYS = 30
+
+
+    # eth_df = yf.download('ETH-USD',DATASET_START_DATE, today)
+
+    eth_df=pd.read_csv("/Users/School/Documents/MDASC/stat7008/Group Project/NFTs_WEB_APP/nft_price.csv")
+    eth_df.head()
+    #NFTs avg price prediction
+    eth_df['Close'] = eth_df['Sandbox'].shift(1)
+    eth_df = eth_df[(eth_df['Date'] > DATASET_START_DATE)]
+    eth_df
+    eth_df.reset_index(inplace=True)
+    eth_df.columns
+    df = eth_df[["Date", NFT_COLLECTION]]
+
+    new_names = {
+        "Date": "ds", 
+        NFT_COLLECTION: "y",
+    }
+
+    df.rename(columns=new_names, inplace=True)
+    # plot the open price
+
+    x = df["ds"]
+    y = df["y"]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=x, y=y))
+
+    # Set title
+    fig.update_layout(
+        title_text="Time series plot of avg price of "+ NFT_COLLECTION +"'s NFTs ",
+    )
+
+    fig.update_layout(
+        xaxis=dict(
+            rangeselector=dict(
+                buttons=list(
+                    [
+                        dict(count=1, label="1m", step="month", stepmode="backward"),
+                        dict(count=6, label="6m", step="month", stepmode="backward"),
+                        dict(count=1, label="YTD", step="year", stepmode="todate"),
+                        dict(count=1, label="1y", step="year", stepmode="backward"),
+                        dict(step="all"),
+                    ]
+                )
+            ),
+            rangeslider=dict(visible=True),
+            type="date",
+        )
+    )
+    m = Prophet(
+    # seasonality_mode="multiplicative" 
+    )
+
+    m.fit(df)
+    future = m.make_future_dataframe(periods = FUTURE_DATAFRAME_DAYS)
+    future.tail()
+    forecast = m.predict(future)
+    forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail()
+    next_day = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
+
+    forecast[forecast['ds'] == next_day]['yhat'].item()
+    fig = plot_plotly(m, forecast)
+    fig2 = plot_components_plotly(m, forecast)
+    st.plotly_chart(fig)
+    st.plotly_chart(fig2)
+
+
+    # n_years = st.slider('Years of prediction:', 1, 4)
+    # period = n_years * 365
+
+    # @st.cache
+    # def load_data(data_name):
+    #     if data_name == "ETH":
+    #         result = pd.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/eth.csv')
+    #     if data_name == "SAND":
+    #         result = pd.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/btc.csv')
+    #     if data_name == "MANA":
+    #         result = pd.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/mana.csv')
+    #     else:
+    #         result = pd.read_csv('https://media.githubusercontent.com/media/jason202005/NFTs_WEB_APP/main/data/token_price/sand.csv')
+    #     # data = yf.download(eth, START, TODAY)
+    #     # data.reset_index(inplace=True)
+    #     return result
+
+    
+    # data_load_state = st.text('Loading data...')
+    # data = load_data(selected_stock)
+    # data_load_state.text('Loading data... done!')
+
+    # st.subheader('Raw data')
+    # st.write(data.tail())
+
+    # # Plot raw data
+    # def plot_raw_data():
+    #     fig = go.Figure()
+    #     fig.add_trace(go.Scatter(x=data['Date'], y=data['Open'], name="stock_open"))
+    #     fig.add_trace(go.Scatter(x=data['Date'], y=data['Low'], name="stock_close"))
+    #     fig.layout.update(title_text='Time Series data with Rangeslider', xaxis_rangeslider_visible=True)
+    #     st.plotly_chart(fig)
+        
+    # plot_raw_data()
+
+    # # Predict forecast with Prophet.
+    # df_train = data[['Date','Low']]
+    # df_train = df_train.rename(columns={"Date": "ds", "Low": "y"})
+
+    # m = Prophet()
+    # m.fit(df_train)
+    # future = m.make_future_dataframe(periods=period)
+    # forecast = m.predict(future)
+
+    # # Show and plot forecast
+    # st.subheader('Forecast data')
+    # st.write(forecast.tail())
+        
+    # st.write(f'Forecast plot for {n_years} years')
+    # fig1 = plot_plotly(m, forecast)
+    # st.plotly_chart(fig1)
+
+    # st.write("Forecast components")
+    # fig2 = m.plot_components(forecast)
+    # st.write(fig2)
